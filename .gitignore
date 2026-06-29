@@ -1,0 +1,45 @@
+# ───── Build outputs ─────
+build/
+**/CMakeCache.txt
+**/CMakeFiles/
+*.o
+*.so
+cmake_install.cmake
+compile_commands.json
+
+# ───── FlexRIC fuzz bridge runtime ─────
+flexric/flexric_fuzz_bridge/crashers/
+flexric/flexric_fuzz_bridge/build/
+
+# ───── ORANalyst go-fuzz build artifacts / binaries ─────
+ORANalyst/O-RAN-SC/oran-input-gen/go-fuzz-bin
+ORANalyst/O-RAN-SC/oran-input-gen/sonar.exe
+ORANalyst/O-RAN-SC/oran-input-gen/cgo_mutator
+ORANalyst/O-RAN-SC/oran-input-gen/fuzz.zip
+ORANalyst/O-RAN-SC/oran-input-gen/cover.exe
+ORANalyst/O-RAN-SC/oran-input-gen/metadata
+ORANalyst/O-RAN-SC/oran-input-gen/metadata_e2t
+ORANalyst/O-RAN-SC/oran-input-gen/corpus/
+ORANalyst/O-RAN-SC/oran-input-gen/bin/
+ORANalyst/O-RAN-SC/oran-input-gen/stat
+ORANalyst/O-RAN-SC/oran-input-gen/mutator/*/mutator
+
+# compiled go-fuzz tooling (no extension)
+**/go-fuzz/go-fuzz/go-fuzz
+**/go-fuzz/go-fuzz-run/go-fuzz-run
+**/go-fuzz/go-fuzz-run/comm
+**/go-fuzz/go-fuzz-build/go-fuzz-build
+**/go-fuzz/go-fuzz-build/build-test/
+**/go-fuzz/go-fuzz-run/unzip/
+
+# ───── Runtime logs / scratch ─────
+fuzz-logs/
+*.log
+mutator_log*.txt
+fuzzerlog.txt
+.superpowers/
+.vscode/
+
+# Note: kpm/build/libkpm.a is intentionally tracked (needed for the cgo link).
+!ORANalyst/O-RAN-SC/oran-input-gen/kpm/build/
+!ORANalyst/O-RAN-SC/oran-input-gen/kpm/build/libkpm.a

@@ -1,0 +1,60 @@
+## ORANalyst Go Fuzzer Build Notes
+## Generated: 2026-06-29
+
+### Go Installation
+- Go version: go1.20.14 linux/amd64
+- Go binary path: /home/osa240000/.local/go/bin/go
+- Go root: /home/osa240000/.local/go
+- Required ENV for build:
+    export PATH=$HOME/.local/go/bin:$PATH
+    export GOTOOLCHAIN=local
+
+### Files Edited (path fixups from original /home/tianchang/... paths)
+
+1. main.go (lines 3-4):
+   BEFORE: // #cgo CFLAGS: -I/home/tianchang/Desktop/proj/oran-sc/oran-input-gen/kpm
+           // #cgo LDFLAGS: -L/home/tianchang/Desktop/proj/oran-sc/oran-input-gen/kpm/build -lkpm -lm
+   AFTER:  // #cgo CFLAGS: -I/home/osa240000/oranalyst/ORANalyst/O-RAN-SC/oran-input-gen/kpm
+           // #cgo LDFLAGS: -L/home/osa240000/oranalyst/ORANalyst/O-RAN-SC/oran-input-gen/kpm/build -lkpm -lm
+
+2. go.mod:
+   BEFORE: go 1.21.1
+           replace github.com/dvyukov/go-fuzz => /home/tianchang/Desktop/proj/oaic-input-gen/go-fuzz
+   AFTER:  go 1.20
+           replace github.com/dvyukov/go-fuzz => /home/osa240000/oranalyst/ORANalyst/O-RAN-SC/oran-input-gen/go-fuzz
+
+3. mutator/e2ap/subprocess.go (lines 3-4): same cgo path fixup as main.go above
+
+4. mutator/kpm/subprocess.go (lines 3-4): same cgo path fixup
+
+5. mutator/e2ap/go.mod: go 1.21.1 -> go 1.20
+
+6. mutator/kpm/go.mod: go 1.21.1 -> go 1.20
+
+7. go-fuzz/go-fuzz/asn1_mutator/mutator.go (lines 3-4): same cgo path fixup
+
+8. go-fuzz/go-fuzz/asn1_mutator/shared_mem.go (line 48):
+   BEFORE: cmd := exec.Command("mutator/kpm/mutator", sharedFile.Name())
+   AFTER:  cmd := exec.Command("mutator/e2ap/mutator", sharedFile.Name())
+   (Selects e2ap mutator for FlexRIC fuzzing instead of kpm mutator)
+
+### Corpus Setup
+- Removed old corpus/ dir and replaced with corpus_e2ap_final/:
+    cd /home/osa240000/oranalyst/ORANalyst/O-RAN-SC/oran-input-gen
+    rm -rf corpus && cp -r corpus_e2ap_final corpus
+- Result: 2306 e2ap seed inputs in corpus/
+
+### Prebuilt Library
+- kpm/build/libkpm.a already present (no rebuild needed)
+- kpm/ headers directory contains E2AP-PDU.h and all required ASN.1 headers
+
+### Build Invocation
+    cd /home/osa240000/oranalyst/ORANalyst/O-RAN-SC/oran-input-gen
+    export PATH=$HOME/.local/go/bin:$PATH
+    export GOTOOLCHAIN=local
+    make fuzzer
+
+### Build Artifacts (verified present after successful build)
+    go-fuzz-bin  18245504 bytes  (fuzzer engine)
+    fuzz.zip      5468062 bytes  (corpus + sonar packed for go-fuzz)
+    sonar.exe     3796016 bytes  (cgo sonar/mutator binary)
