@@ -43,3 +43,11 @@ fuzzerlog.txt
 # Note: kpm/build/libkpm.a is intentionally tracked (needed for the cgo link).
 !ORANalyst/O-RAN-SC/oran-input-gen/kpm/build/
 !ORANalyst/O-RAN-SC/oran-input-gen/kpm/build/libkpm.a
+
+# ───── 24h coverage campaign artifacts ─────
+flexric/build-cov/
+flexric/flexric_fuzz_bridge/tools/libgcovflush.so
+campaign-*/
+*.gcda
+*.gcno
+__pycache__/
